@@ -32,11 +32,11 @@ qualitycheck <- function(dataset,counts){
 			report[6,i] <- "Warning"
 		}
 		if(!tmp[1]) 
-			report[6,i] <- paste(report[6,i], "too few experiments", sep=";")
+			report[6,i] <- paste(report[6,i], "only one experiment", sep=";")
 		if(!tmp[2]) 
-			report[6,i] <- paste(report[6,i], "too many repeated values", sep=";")
+			report[6,i] <- paste(report[6,i], "many repeated values", sep=";")
 		if(!tmp[3]) 
-			report[6,i] <- paste(report[6,i], "too many NAs", sep=";")
+			report[6,i] <- paste(report[6,i], "many missing values", sep=";")
 		
 	}
 	return(report)

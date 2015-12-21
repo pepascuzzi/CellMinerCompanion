@@ -36,7 +36,7 @@ http://CRAN.R-project.org/package=RColorBrewer
 Frank E Harrell Jr, with contributions from Charles Dupont and many others. (2015). 
 Hmisc: Harrell Miscellaneous. R package version 3.16-0. 
 http://CRAN.R-project.org/package=Hmisc
-# We mainly used cut2 function from Hmisc package. 
+# We borrowed the cut2 function from Hmisc package. 
 
 #-------------------------------------------------------------------------------
 
