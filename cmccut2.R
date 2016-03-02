@@ -4,7 +4,7 @@
 # http://CRAN.R-project.org/package=Hmisc 
 # We mainly used its cut2 function.
 
-cut2 <- function (x, cuts, m = 150, g, levels.mean = FALSE, digits, minmax = TRUE, 
+cmccut2 <- function (x, cuts, m = 150, g, levels.mean = FALSE, digits, minmax = TRUE, 
     oneval = TRUE, onlycuts = FALSE) 
 {
     method <- 1

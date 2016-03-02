@@ -1,10 +1,10 @@
 require(cluster)
 require(RColorBrewer)
-source("cut2.R")
+source("cmccut2.R")
 
-
-heatmap <- function(cluster.clust, cluster.no,zscore.mat,maporder,type) {
-
+# this part is plotting the heatmap based on hierachical cluster
+cmcheatmap <- function(cluster.clust, cluster.no, zscore.mat, maporder, type) {
+# this part is determine the order shown up in heatmap
 if (maporder == "use hierarchical cluster order") {
 	my.cuts <- cutree(cluster.clust, cluster.no)
 	sample.count <- table(my.cuts)
@@ -17,8 +17,7 @@ if (maporder == "use hierarchical cluster order") {
 	ordered.mat <- zscore.mat
 }
 
-##This code needed to produce horizontal bars across heat map
-##that group the cell lines by tissue.
+# This code is producing horizontal bars based on tissue of origin across heat map
 cell.tags <- c("BR:", "CNS:", "CO:", "LE:", "ME:", "LC:", "OV:", "PR:", "RE:")
 cell.count <- vector(mode="integer", length=length(cell.tags))
 for(i in 1:length(cell.tags)){
@@ -30,9 +29,10 @@ mat.cols <- ncol(ordered.mat)
 
 image.list<-list(x=1:mat.cols,y=1:mat.rows,z=t(ordered.mat[mat.rows:1,]))
 
+# this code is producing breaks used in the heatmap, either by deciles or by p-values significance
 if (type == "deciles") {
 	break.length <- 10
-	my.breaks <- cut2(ordered.mat, g=break.length, onlycuts=T)
+	my.breaks <- cmccut2(ordered.mat, g=break.length, onlycuts=T)
 } else {
 	constant <- c(-3.30, -2.57, -1.96, -1.65, 0, 1.65, 1.96, 2.57, 3.30)
 	mini <- min(ordered.mat,na.rm=T)
@@ -52,19 +52,17 @@ if (type == "deciles") {
 	my.breaks <- c(my.breaks.mini,constant,my.breaks.maxi)
 }
 
+# assign color to breaks
 n <- length(my.breaks)
-
 my.breaks[1] <- floor(my.breaks[1])
 my.breaks[n] <- ceiling(my.breaks[n])
 color.no <- n-1
 my.colors <- brewer.pal(color.no, "RdBu")[color.no:1]
 
-
+# plot the heatmap and its corresponding key color
 key.list <- list(x=1:n, y=1, z=as.matrix(my.breaks[2:n], ncol=1))
-
 layout(matrix(c(1,0,1,2,1,0), ncol=3), width=c(1/3, 1/3, 1/3), heights=c(0.9, 0.1))
-
-par(las=1, mar=c(1,8,9,2)+0.1, cex=1)
+par(las=1, mar=c(1,8,10,2)+0.1, cex=1)
 
 image(image.list,col=my.colors,breaks=my.breaks,yaxt="n",xaxt="n",ylab="",main=NULL)
 box(lwd=2)
