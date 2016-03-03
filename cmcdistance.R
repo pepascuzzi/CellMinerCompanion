@@ -9,9 +9,7 @@ cmcdistance <- function (dist.choice,zscore.mat) {
 	} else {
 		cluster.dist <- daisy(t(zscore.mat), metric="manhattan", stand=F)
 	}
-	
-	cluster.clust <- agnes(cluster.dist, diss=T, method="average")
-	return (cluster.clust)	
+	return (cluster.dist)	
 }
 		
 		

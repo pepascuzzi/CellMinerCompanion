@@ -57,17 +57,24 @@ shinyServer(function(input, output, session){
             return(NULL)
         zscore.mat <- datasetInput3()
         dist.choice <- input$distance
-        cluster.clust <- cmcdistance(dist.choice,zscore.mat)
+        cluster.dist <- cmcdistance(dist.choice, zscore.mat)
     })
     
-    # order zscore matrix based on cluster order
     datasetInput5 <- reactive({
         if (is.null(datasetInput()))
             return(NULL)
+        cluster.dist <- datasetInput4()
+        cluster.clust <- agnes(cluster.dist, diss=T, method="average")
+    })
+    
+    # order zscore matrix based on cluster order
+    datasetInput6 <- reactive({
+        if (is.null(datasetInput()))
+            return(NULL)
         zscore.mat <- datasetInput3()
-        cluster.clust <- datasetInput4()
+        cluster.clust <- datasetInput5()
         if (input$maporder == "use hierarchical cluster order") {
-            ordered.mat <- zscore.mat[,cluster.clust$order]
+            ordered.mat <- zscore.mat[, cluster.clust$order]
         } else {
             ordered.mat <- zscore.mat
         }
@@ -84,7 +91,7 @@ shinyServer(function(input, output, session){
     })	
     # output normalized zscore matrix
     output$zscore <- renderTable({
-        dataset <- datasetInput5()
+        dataset <- datasetInput6()
     })	
     
     # define plot width
@@ -99,7 +106,7 @@ shinyServer(function(input, output, session){
         if (is.null(datasetInput()))
             return(NULL) 
         # get data and heatmap order and type
-        cluster.clust <- datasetInput4()
+        cluster.clust <- datasetInput5()
         cluster.no <- input$cluster
         zscore.mat <- datasetInput3()
         maporder <- input$maporder
@@ -112,7 +119,7 @@ shinyServer(function(input, output, session){
     output$plot2 <- renderPlot({
         if (is.null(datasetInput()))
             return(NULL) 
-        cluster.clust <- datasetInput4()
+        cluster.clust <- datasetInput5()
         zscore.mat <- datasetInput3()[, cluster.clust$order]
         n <- ncol(zscore.mat)
         par(las=1, mar=c(8, 4, 3, 1) + 0.1, cex=1.5)
@@ -125,19 +132,21 @@ shinyServer(function(input, output, session){
     output$plot3 <- renderPlot({
         if (is.null(datasetInput()))
             return(NULL) 
-        cluster.clust <- datasetInput4()
+        cluster.dist <- datasetInput4()
+        cluster.clust <- datasetInput5()
         # plot number of cluster and silhouette coefficient
-        cmcsilplot(cluster.clust)		
+        cmcsilplot(my.cluster=cluster.clust, my.dist=cluster.dist)		
     }, width=plotWidth
     )	
     # output silhouette table
     output$siltable <- renderTable({
         if (is.null(datasetInput()))
             return(NULL) 
-        cluster.clust <- datasetInput4()
+        cluster.dist <- datasetInput4()
+        cluster.clust <- datasetInput5()
         cluster.no <- input$cluster
         # plot number of cluster and silhouette coefficient
-        cmcsiltable(cluster.clust, cluster.no)		
+        cmcsiltable(my.cluster=cluster.clust, my.dist=cluster.dist, my.no=cluster.no)		
     })			
     
     # download table and plot
