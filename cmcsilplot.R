@@ -10,7 +10,7 @@ cmcsilplot <- function (my.cluster, my.dist){
         my.opt[i] <- mean(my.sil[, "sil_width"])
     }
     plot(2:sample.no, c(my.opt, 0), type="o", lwd=2, las=2, ylab="silhouette", xlab="number of clusters")
-    abline(v=seq(from=0, to=sample.no, by=2), lty=2)
+    abline(v=seq(from=0, to=sample.no, by=5), lty=2)
     y <- c(my.opt, 0)
     max_val <- which.max(y) + 1
     title(paste("The optimal number of cluster is", max_val))
